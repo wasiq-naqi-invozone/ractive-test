@@ -40,11 +40,13 @@ export default Ractive.extend({
     data:{
         emailData: [],
         selectedLead: null,
+        timerIntance: null,
     },
     storage: storage(storageName),
     on: {
         onExit(){
-            console.log("Submit");
+            console.log("Exit from lead");
+            this.clearTimer()
             Router.go('/overview');
         },
         onSubmitLead(context, status){
@@ -73,6 +75,7 @@ export default Ractive.extend({
     pickLead(){
         // resetting previous lead
         this.set('selectedLead');
+        this.clearTimer()
 
         const allLeads = this.get('emailData');
         const lead =  allLeads.find((lead) => lead.status == 'pending')
@@ -83,6 +86,18 @@ export default Ractive.extend({
 
         if(!lead) alert('No lead is available at the moment');
         this.set('selectedLead', lead);
+        const timeout = setTimeout(() => {
+            alert("Page will be refreshed because session was expired");
+            this.pickLead();
+        }, 120000);
+        this.set('timerIntance', timeout);
 
     },
+    clearTimer(){
+        const isTimerRunning = this.get('timerIntance');
+        if(isTimerRunning) {
+            clearInterval(isTimerRunning)
+            console.log("Timer cleared")
+        }
+    }
 });

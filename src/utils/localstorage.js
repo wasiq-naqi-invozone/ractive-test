@@ -5,6 +5,11 @@ const localstorage = (name) => {
         return items ?? []
     }
 
+    function setAll(items){
+        localStorage.setItem(name, JSON.stringify(items));
+        return items;
+    }
+
     function update(index, body){
         
         const items = JSON.parse(localStorage.getItem(name))
@@ -22,6 +27,7 @@ const localstorage = (name) => {
     return {
         getAll,
         update,
+        setAll,
     }
 
 }
