@@ -8,7 +8,7 @@ export default Ractive.extend({
                 <form>
                     <div class="form-group">
                     <label for="input-user"><span class="text-muted ft-20">User</span></label>
-                    <select value={{}} class="form-control form-control-lg">
+                    <select value={{selectedUser}} class="form-control form-control-lg">
                         <option value="">Select User</option>
                         <option value="1">User 1</option>
                         <option value="2">User 2</option>
@@ -26,16 +26,14 @@ export default Ractive.extend({
         </div>
     `,
     data:{
-
+        selectedUser: ""
     },
     on: {
         onSubmit(){
-            console.log("Submit");
+            const selectedUser = this.get('selectedUser');
+            console.log({ selectedUser })
             Router.go('/lead');
         },
-    },
-    onSubmit(){
-        console.log("Submit");
     },
     oninit() {
         console.log('Home init');
