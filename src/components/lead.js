@@ -1,7 +1,6 @@
 import Ractive from 'ractive';
 import storage from '../utils/localstorage';
 import Router from '../utils/ractive-router'
-
 const storageName = 'emailData';
 
 export default Ractive.extend({

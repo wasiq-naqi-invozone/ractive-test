@@ -1,6 +1,8 @@
 import Ractive from 'ractive';
 import Router from '../utils/ractive-router'
 import storage from '../utils/localstorage';
+var user = localStorage.getItem('loginUser');
+ var data1 = JSON.parse(user);
 const storageName = 'emailData';
 
 export default Ractive.extend({
@@ -22,7 +24,7 @@ export default Ractive.extend({
         </div>
 
         <div class="row mt-80">
-        <!--
+       
             <div class="col-md-12">
                 <h2 class="text-center text-muted">All Leads</h2>
             </div>
@@ -98,7 +100,6 @@ export default Ractive.extend({
                 </div>
             </div>
             </div>
-        -->
             {{#each emailData}}
             <div class="col-md-12 mb-2">
                 <div class="border rounded p-3">
@@ -130,8 +131,9 @@ export default Ractive.extend({
 
         </div>
     `,
-    data:{
+    data:{ 
         emailData: [],
+        processedBy:"",
         countPositiveReply: 0,
         countNeutralReply: 0,
         countNotALead: 0,
@@ -145,7 +147,7 @@ export default Ractive.extend({
             const currentData = this.get('emailData');
             const newData = currentData.map((item) => {
                 return{
-                    ...item,
+                    item,
                     status: 'pending'
                 }
             })
@@ -159,6 +161,7 @@ export default Ractive.extend({
         console.log('Overview init');
         const data = this.storage.getAll();
         this.set('emailData', data);
+        this.set('processedBy',data1.name);
     },
     observe:{
         // Observe changes on the array
@@ -177,9 +180,9 @@ export default Ractive.extend({
             }
 
             // Update variables
-            this.set('countPositiveReply', status['positive_reply'] ?? 0);
-            this.set('countNeutralReply', status['neutral_reply'] ?? 0);
-            this.set('countNotALead', status['not_a_lead'] ?? 0);
+            this.set('countPositiveReply', status['positive_reply'] );
+            this.set('countNeutralReply', status['neutral_reply'] );
+            this.set('countNotALead', status['not_a_lead']);
         },
     },
     onteardown() {
