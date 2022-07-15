@@ -2,7 +2,7 @@ const localstorage = (name) => {
     
     function getAll(){
         const items = JSON.parse(localStorage.getItem(name))
-        return items ?? []
+        return items;
     }
 
     function setAll(items){

@@ -1,30 +1,59 @@
+const webpack = require('webpack');
 const path = require('path');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-module.exports = {
-    mode: 'development',
-    entry: "./src/app.js",
-    output:{
-        filename: "bundle.js",
-        path: path.resolve(__dirname, "dist"),
-        // publicPath: 'dist'
+const config = {
+    entry: {
+        app: path.resolve('src/app.js'),
+        vendors: ['ractive','ractivejs-router','jquery','tether', 'bootstrap']
     },
-    devServer: {
-        static: {
-          directory: path.join(__dirname, 'dist'),
-        },
-        compress: true,
-        port: 8080,
-        devMiddleware: {
-          writeToDisk: true
-        }
+
+    output: {
+        path: path.resolve('dist'),
+        filename: 'bundle.js'
     },
-    plugins: [
-      new CopyWebpackPlugin({
-        patterns: [
-          { from: "assets", to: "assets" },
-        ],
-      }),
-    ],
-}
+
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader'
+            },
+            {
+				test: /\.css$/,
+				use: ExtractTextPlugin.extract({
+					use: "css-loader"
+				})
+            },
+            {
+                // you can scope this by directory or using another extension
+                // using .html for your components gives you good
+                // syntax highlighting with most editors
+                test: /\.html$/,
+                loader: 'ractive-loader'
+            }
+        ]
+    },
+
+	plugins: [
+		new ExtractTextPlugin({
+			filename: "bundle.css",
+			allChunks: true
+        }),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            tether: 'tether',
+            Tether: 'tether',
+            'window.Tether': 'tether',
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendors',
+            filename: 'vendors.js'
+        })
+	]
+};
+
+module.exports = config;
