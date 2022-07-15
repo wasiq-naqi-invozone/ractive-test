@@ -21,9 +21,9 @@ const config = {
         },
         compress: true,
         port: 8080,
-        // devMiddleware: {
-        //   writeToDisk: true
-        // }
+        devMiddleware: {
+          writeToDisk: true
+        }
     },
 
     // module: {
