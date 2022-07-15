@@ -76,12 +76,11 @@ export default Ractive.extend({
     },
     pickLead(){
 
-        const userKiId = 1;
+        const userId = 1;
         const selectedLead = this.get('selectedLead');
         const timerIntance = this.get('timerIntance');
 
         if(selectedLead && timerIntance){
-            const userId = userKiId;
             if(!selectedLead.hasOwnProperty('restrict')) selectedLead['restrict'] = [];
             selectedLead['restrict'].push(userId);
             const leadId = selectedLead.id;
@@ -93,7 +92,7 @@ export default Ractive.extend({
         this.clearTimer()
 
         const allLeads = this.get('emailData');
-        const lead =  allLeads.find((lead) => lead.status == 'pending')
+        const lead =  allLeads.find((lead) => lead.status == 'pending' && lead.restrict && lead.restrict.indexOf(userId) == -1 )
         const leadIndex = allLeads.indexOf(lead);
 
         lead.index = leadIndex;
