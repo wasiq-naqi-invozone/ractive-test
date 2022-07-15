@@ -8,7 +8,7 @@ export default Ractive.extend({
             <div class="row mt-5">
             <div class="col-md-12 d-flex align-items-center justify-content-between">
                 <p class="mb-0 ft-20 text-uppercase text-muted">Elapsed Time</p>
-                <button on-click="onExit" class="text-uppercase btn btn-secondary rounded-pill">Exit</button>
+                <button on-click="onExit" class="text-uppercase btn btn-secondary rounded-pill">Back</button>
             </div>
         </div>
 
@@ -52,11 +52,12 @@ export default Ractive.extend({
 
             console.log(status)
             const lead = this.get('selectedLead');
-
             if(!lead) alert('No lead is selected at a moment');
             
+            const user = localStorage.getItem('loginUser');
             const leadId = lead.id;
             lead.status = status;
+            lead.processed_by = user;
             // delete lead.id;
 
             this.storage.update(leadId, lead);
@@ -72,6 +73,7 @@ export default Ractive.extend({
     },
     onteardown() {
         console.log('Lead teardown');
+        this.clearTimer();
     },
     pickLead(){
 
@@ -91,11 +93,11 @@ export default Ractive.extend({
         this.clearTimer()
 
         const allLeads = this.get('emailData');
-        const lead =  allLeads.find((lead) => lead.status == 'pending' && lead.restrict && lead.restrict.indexOf(userId) == -1 )
-        const leadIndex = allLeads.indexOf(lead);
-
-        lead.index = leadIndex;
-        console.log({ leadIndex, lead })
+        const lead =  allLeads.find((lead) => lead.status == 'pending' && (lead.restrict && lead.restrict.indexOf(userId) == -1) || (!lead.restrict) )
+        console.log({ lead })
+        // const leadIndex = allLeads.indexOf(lead);
+        // lead.index = leadIndex;
+        // console.log({ leadIndex, lead })
 
         if(!lead) alert('No lead is available at the moment');
         this.set('selectedLead', lead);
@@ -113,5 +115,12 @@ export default Ractive.extend({
             console.log("Timer cleared")
         }
         this.set('timerIntance', null);
+    },
+    onrender(){
+        // Redirect if user already login
+        const loginUser = localStorage.getItem('loginUser');
+        if(!loginUser){
+            Router.go('/');
+        }
     }
 });

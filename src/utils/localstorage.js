@@ -6,6 +6,7 @@ const localstorage = (name) => {
     }
 
     function setAll(items){
+        console.log({ name, items })
         localStorage.setItem(name, JSON.stringify(items));
         return items;
     }
