@@ -50,15 +50,17 @@ export default Ractive.extend({
             Router.go('/overview');
         },
         onSubmitLead(context, status){
+
             console.log(status)
             const lead = this.get('selectedLead');
 
             if(!lead) alert('No lead is selected at a moment');
-            const index = lead.index;
+            
+            const leadId = lead.id;
             lead.status = status;
-            delete lead.index;
+            // delete lead.id;
 
-            this.storage.update(index, lead);
+            this.storage.update(leadId, lead);
             this.pickLead();
 
         }
@@ -73,8 +75,21 @@ export default Ractive.extend({
         console.log('Lead teardown');
     },
     pickLead(){
+
+        const userKiId = 1;
+        const selectedLead = this.get('selectedLead');
+        const timerIntance = this.get('timerIntance');
+
+        if(selectedLead && timerIntance){
+            const userId = userKiId;
+            if(!selectedLead.hasOwnProperty('restrict')) selectedLead['restrict'] = [];
+            selectedLead['restrict'].push(userId);
+            const leadId = selectedLead.id;
+            this.storage.update(leadId, selectedLead);
+        }
+
         // resetting previous lead
-        this.set('selectedLead');
+        this.set('selectedLead', null);
         this.clearTimer()
 
         const allLeads = this.get('emailData');
@@ -99,5 +114,6 @@ export default Ractive.extend({
             clearInterval(isTimerRunning)
             console.log("Timer cleared")
         }
+        this.set('timerIntance', null);
     }
 });

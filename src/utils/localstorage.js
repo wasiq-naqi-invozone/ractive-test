@@ -10,14 +10,14 @@ const localstorage = (name) => {
         return items;
     }
 
-    function update(index, body){
+    function update(id, body){
         
         const items = JSON.parse(localStorage.getItem(name))
 
-        // body.id = id;
-        // const itemIndex = items.findIndex(e => e.id == id);
+        body.id = id;
+        const itemIndex = items.findIndex(e => e.id == id);
 
-        items[index] = body;
+        items[itemIndex] = body;
         localStorage.setItem(name, JSON.stringify(items));
 
         return body;
